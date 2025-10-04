@@ -14,7 +14,7 @@ const LoginPage = () => {
         e.preventDefault();
         setError('');
         try {
-            const res = await axios.post('quizarenaproject-production.up.railway.app/api/auth/login', { email, password });
+            const res = await axios.post('https://quizarenaproject-production.up.railway.app/api/auth/login', { email, password });
             login(res.data);
             navigate('/');
         } catch (err) {

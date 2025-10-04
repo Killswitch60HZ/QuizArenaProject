@@ -13,7 +13,7 @@ const RegisterPage = () => {
         e.preventDefault();
         setError('');
         try {
-            await axios.post('quizarenaproject-production.up.railway.app/api/auth/register', { username, email, password });
+            await axios.post('https://quizarenaproject-production.up.railway.app/api/auth/register', { username, email, password });
             navigate('/login');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed.');

@@ -8,7 +8,7 @@ const LeaderboardPage = () => {
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const res = await axios.get('quizarenaproject-production.up.railway.app/api/users/leaderboard');
+                const res = await axios.get('https://quizarenaproject-production.up.railway.app/api/users/leaderboard');
                 setLeaderboard(res.data);
             } catch (err) {
                 setError('Could not fetch leaderboard data.');
