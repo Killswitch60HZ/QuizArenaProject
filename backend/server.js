@@ -10,7 +10,9 @@ const Game = require('./models/Game');
 dotenv.config();
 connectDB();
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: "https://snazzy-lokum-b58c1c.netlify.app" // Your live frontend URL
+}));
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
@@ -20,7 +22,7 @@ app.use('/api/games', require('./routes/games'));
 
 const PORT = process.env.PORT || 8800;
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "http://localhost:3001" } });
+const io = new Server(server, { cors: { origin: "https://snazzy-lokum-b58c1c.netlify.app" } });
 
 const waitingPlayers = {};
 const activeGames = {};
