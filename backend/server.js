@@ -22,7 +22,8 @@ app.use('/api/games', require('./routes/games'));
 
 const PORT = process.env.PORT || 8800;
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "https://snazzy-lokum-b58c1c.netlify.app" } });
+const io = new Server(server, { cors: { origin: "https://snazzy-lokum-b58c1c.netlify.app" },
+    methods:["GET", "POST"] });
 
 const waitingPlayers = {};
 const activeGames = {};
