@@ -1,3 +1,3 @@
 import { io } from 'socket.io-client';
-const URL = 'http://localhost:8800';
+const URL = 'quizarenaproject-production.up.railway.app';
 export const socket = io(URL); // Connect automatically
