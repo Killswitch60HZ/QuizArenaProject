@@ -1,25 +1,100 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+// import './RegisterPage.css'; // Your CSS file
 
 const RegisterPage = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+  // State for form fields
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        try {
-            await axios.post('https://quizarenaproject-production.up.railway.app/api/auth/register', { username, email, password });
-            navigate('/login');
-        } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed.');
-        }
-    };
+  // State for loading and error messages
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
-    return ( <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-800 to-blue-600 p-4"><form className="w-full max-w-md p-8 space-y-6 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg border border-white/20" onSubmit={handleSubmit}><div className="text-center text-white"><h1 className="text-4xl font-bold">Join the Arena</h1><p className="mt-2">Create your account to start battling!</p></div>{error && <p className="p-3 bg-red-500/50 text-white text-sm text-center rounded-md">{error}</p>}<div className="space-y-4"><div><label className="block text-sm font-medium text-gray-200" htmlFor="username">Username</label><input id="username" type="text" className="w-full px-4 py-2 mt-1 text-white bg-white/10 rounded-md border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400" value={username} onChange={(e) => setUsername(e.target.value)} required /></div><div><label className="block text-sm font-medium text-gray-200" htmlFor="email">Email</label><input id="email" type="email" className="w-full px-4 py-2 mt-1 text-white bg-white/10 rounded-md border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400" value={email} onChange={(e) => setEmail(e.target.value)} required /></div><div><label className="block text-sm font-medium text-gray-200" htmlFor="password">Password</label><input id="password" type="password" className="w-full px-4 py-2 mt-1 text-white bg-white/10 rounded-md border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400" value={password} onChange={(e) => setPassword(e.target.value)} required /></div></div><button type="submit" className="w-full py-3 font-semibold text-gray-900 bg-yellow-400 rounded-md hover:bg-yellow-500 transition-all duration-300">Create Account</button><p className="text-center text-sm text-gray-300">Already have an account?{' '}<Link to="/login" className="font-medium text-yellow-400 hover:underline">Login</Link></p></form></div>);
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    // **Construct the full API URL for registration**
+    const API_ENDPOINT = `${process.env.REACT_APP_API_URL}/api/auth/register`;
+
+    try {
+      // Make the POST request
+      await axios.post(API_ENDPOINT, {
+        username,
+        email,
+        password,
+      });
+
+      // Handle successful registration
+      setSuccessMessage('Registration successful! You can now log in.');
+      // Optionally, you can redirect the user to the login page after a few seconds
+
+    } catch (err) {
+      // Handle errors from the backend
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Registration failed. Please try again.');
+      }
+      console.error('Registration error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="register-container"> {/* Use your own CSS classes */}
+      <form onSubmit={handleRegister}>
+        <h2>Create an Account</h2>
+
+        {/* Display success or error messages */}
+        {error && <div className="error-message">{error}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
+
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
+      </form>
+    </div>
+  );
 };
+
 export default RegisterPage;
